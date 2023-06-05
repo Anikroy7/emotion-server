@@ -19,16 +19,15 @@ const userSchema = new Schema({
   },
   imageUrl: {
     type: String,
-    required: true,
   },
   address: {
     type: String,
-    required: true,
   },
   university: {
     type: String,
-    required: true,
   },
+}, {
+  timeStamps: true
 });
 
 const User = model("User", userSchema);
