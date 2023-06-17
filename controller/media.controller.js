@@ -71,14 +71,24 @@ exports.getMediaById = async (req, res) => {
 // Update a media post by ID
 exports.updateMedia = async (req, res) => {
   const { id } = req.params;
-  const { userId } = req.body;
-
+  const { userId, isexists } = req.body;
+  console.log(userId, isexists);
   try {
-    const updatedMedia = await Media.findOneAndUpdate(
-      { _id: id, reactions: { $ne: userId } }, 
-      { $addToSet: { reactions: userId } }, 
-      { new: true }
-    );
+    let updatedMedia;
+
+    if (isexists) {
+      updatedMedia = await Media.findOneAndUpdate(
+        { _id: id, reactions: { $ne: userId } },
+        { $addToSet: { reactions: userId } },
+        { new: true }
+      );
+    } else {
+      updatedMedia = await Media.findOneAndUpdate(
+        { _id: id },
+        { $pull: { reactions: userId } },
+        { new: true }
+      );
+    }
 
     if (!updatedMedia) {
       return res.status(404).json({
@@ -121,6 +131,41 @@ exports.deleteMedia = async (req, res) => {
     res.status(500).json({
       status: "failed",
       message: "Failed to delete media post",
+      error: error.message,
+    });
+  }
+};
+
+// update Media comment
+exports.updateMediaComment = async (req, res) => {
+  const { mediaId, commentId } = req.body;
+
+  try {
+    const updatedMediaComment = await Media.findOneAndUpdate(
+      { _id: mediaId },
+      {
+        $addToSet: {
+          comment: commentId,
+        },
+      }
+    );
+
+    if (!updatedMediaComment) {
+      return res.status(404).json({
+        status: "failed",
+        message: "Media post not found",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: updatedMediaComment,
+      message: "Media post comment updated successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "failed",
+      message: "Failed to update media comment",
       error: error.message,
     });
   }

@@ -13,4 +13,6 @@ router
   .put(mediaController.updateMedia)
   .delete(mediaController.deleteMedia);
 
+router.route('/up_comment', mediaController.updateMediaComment)
+
 module.exports = router;

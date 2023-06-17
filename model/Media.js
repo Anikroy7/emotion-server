@@ -19,20 +19,15 @@ const mediaSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    timestamp: {
+      type: Date,
+      default: Date.now,
+    },
     comments: [
       {
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-          required: true,
-        },
         comment: {
-          type: String,
-          required: true,
-        },
-        timestamp: {
-          type: Date,
-          default: Date.now,
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Comment",
         },
       },
     ],
@@ -41,7 +36,6 @@ const mediaSchema = new mongoose.Schema(
     timestamps: true, // Enable the timestamps option
   }
 );
-
 
 const Media = mongoose.model("Post", mediaSchema);
 

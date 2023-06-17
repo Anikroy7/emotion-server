@@ -2,8 +2,9 @@ const User = require("../model/User");
 
 exports.createUser = async (req, res) => {
   const data = req.body;
-  data.location = "";
+  data.address = "";
   data.university = "";
+  data.imageUrl = null;
   console.log(data);
   try {
     const user = await User.findOne({ email: data.email });
@@ -76,12 +77,12 @@ exports.getUserByEmail = async (req, res) => {
 // Update user data by email
 exports.updateUser = async (req, res) => {
   const { email } = req.params;
-  const { name, location, about } = req.body;
+  const { name, address, university, imageUrl } = req.body;
 
   try {
     const updatedUser = await User.findOneAndUpdate(
       { email },
-      { name, location, about },
+      { name, address, university, imageUrl },
       { new: true }
     );
 
